@@ -153,7 +153,7 @@ if selected == 'Curhat Kuy':
                     st.warning('[+] Pesanmu sudah terkirim , Hanya admin GENRE yang bisa melihat.')
                     # write database normal
                     f = open('cerita_global.txt','a')
-                    f.write(f'Name : {nama}|age : {age}|post date : {now} {date}|Hidden : True\n{curhat}\n')
+                    f.write(f'\nName : {nama}|age : {age}|post date : {now} {date}|Hidden : True\n{curhat}\n')
                     f.close()
 
                     # sending master database
@@ -168,12 +168,12 @@ if selected == 'Curhat Kuy':
                     st.warning('[+] Chek pesanmu pada page Curhatku pada taskbar')
                     # write database normal
                     f = open('cerita_publick.txt','a')
-                    f.write(f'Name : {nama}|age : {age} {date}\n{curhat}\n')
+                    f.write(f'\nName : {nama}|age : {age} {date}\n{curhat}\n')
                     f.close()
 
                     # write database normal
                     f = open('cerita_global.txt','a')
-                    f.write(f'Name : {nama}|age : {age}|post date : {now} {date}|Hidden : False\n{curhat}\n')
+                    f.write(f'\nName : {nama}|age : {age}|post date : {now} {date}|Hidden : False\n{curhat}\n')
                     f.close()
 
                     # sending master database
@@ -311,13 +311,13 @@ if selected == 'Setting':
                     #MainMenu {visibility: hidden;}
                     #stToolbar {visibility: hidden;}
                     #viewerBadge_container__r5tak styles_viewerBadge__CvC9N {visibility: hidden;}
+                    stToolbar {visibility: hidden;}
                     footer {visibility: hidden;}
                 </style>
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
     # Security
-    #passlib,hashlib,bcrypt,scrypt
     import hashlib
     def make_hashes(password):
         return hashlib.sha256(str.encode(password)).hexdigest()
@@ -348,141 +348,34 @@ if selected == 'Setting':
         data = c.fetchall()
         return data
 
+    import login_signup as losi
+
     def main():
         """Simple Login App"""
 
-        menu = ["Login","SignUp"]
-        choice = st.sidebar.selectbox("Menu",menu)
+        cache = (str(st.cache_resource))
+        cache = (cache[73:91])
+        cache = (cache.replace('<streamlit.runtime.caching.cache_resource_api.CacheResourceAPI object at ',''))
+        a = open(f'history.json')
+        data = json.load(a)
+        x = cache
+        y = 'True|0'
 
-        if choice == "Login":
-            st.subheader("Login/Logout")
+        if x in data:
+            chek_login = (f'{data[x]}')
+            if chek_login == 'True':
+                import show_database as sd
+                sd.sd(st,ws,wb,view_all_users,pd,cache)
+        else:
 
-            username = st.text_input("User Name")
-            password = st.text_input("Password",type='password')
-            if st.checkbox("Login"):
-                # if password == '12345':
-                create_usertable()
-                hashed_pswd = make_hashes(password)
+            menu = ["Login","SignUp"]
+            choice = st.sidebar.selectbox("Menu",menu)
 
-                result = login_user(username,check_hashes(password,hashed_pswd))
-                if result:
+            if choice == "Login":
+                losi.login(st,make_hashes,login_user,check_hashes,cache,create_usertable,ws,wb,view_all_users,pd)
 
-                    st.success("Logged In as {}".format(username))
-
-                    task = st.selectbox("Task",["SUARA HATI","Analytics","Profiles"])
-                    if task == "SUARA HATI":
-
-                        # ============== MAKE DATA TXT TO EXEL ==============#
-                        # Using readlines()
-                        file1 = open('cerita_global.txt', 'r', encoding="utf-8")
-                        Lines = file1.readlines()
-                        count = 0
-                        # Strips the newline character
-                        for line in Lines:
-                            count += 1
-                            linee = count
-                            data = (count, line.strip())
-                            data = str(data)
-                            tasta = ('IDENTITAS' if (count % 2 == 0) else 'CERITA')
-
-                            if tasta == 'CERITA':
-
-                                # data remove
-                                data = data.replace(f"({count}, 'Name : "," ")
-                                data = data.replace("age : "," ")
-                                data = data.replace("post date : "," ")
-                                data = data.replace("Hidden : "," ")
-                                data = data.replace("')"," ")
-                                data = data.split('|')
-                                #============== ==============#
-                                nama     = data[0]
-                                age      = data[1]
-                                postdate = data[2]
-                                hidden   = data[3]
-
-                                ws[f'A{count}'] = nama
-                                ws[f'B{count}'] = age
-                                ws[f'C{count}'] = postdate
-                                ws[f'D{count}'] = hidden
-
-                            if tasta == "IDENTITAS":
-                                data = data.replace(f"({count}, '"," ")
-                                data = data.replace("')"," ")
-                                data = str(data)
-                                cerita = data
-
-                                #print(f'Name      : {nama}\nig        : {ig}\nage       : {age}\npost date : {postdate}\nHidden    : {hidden}\ncerita    : {cerita}')
-                                #print('')
-                                ws[f'F{count}'] = cerita
-
-                        wb.save('genre.csv')
-                        # ============== MAKE DATA TXT TO EXEL ==============#
-
-                        col1, col2, col3, col4, col5, col6= st.columns(6)
-                        with col1:
-                            st.info('Import All data user in csv : ', icon="ℹ️")
-                        with col2:
-                            with open("genre.csv", "rb") as file:
-                                btn = st.download_button(
-                                        label="DOWNLOAD genre.csv",
-                                        data=file,
-                                        file_name="genre.csv",
-                                        mime=""
-                                    )
-
-                        # reading database
-                        database = open('cerita_global.txt', 'r', encoding="utf-8")
-                        count = 0
-                        # Using for loop
-                        for data in database:
-                            count += 1
-                            text = (str(data.strip()))
-                            ganjil_genap = ('genap' if (count % 2 == 0) else 'ganjil')
-                            if ganjil_genap == 'ganjil':
-                                col1, col2= st.columns(2)
-                                with col1:
-                                    st.success(text, icon="ℹ")
-                                    if text.count('Hidden : True'):
-                                        text = text.replace('200'or'404','')
-                                        status_hidden = True
-                                    if text.count('Hidden : False'):
-                                        status_hidden = False
-                                with col2:
-                                    st.info(f"Hidden : {status_hidden}")
-
-                            if ganjil_genap == 'genap':
-                                if status_hidden == True:
-                                    st.error(text, icon="🚨")
-                                else:
-                                    st.info(text, icon="ℹ️")
-                                st.warning('|'+'-'*60+'|')
-                            st.caption('')
-
-                    elif task == "Analytics":
-                        st.caption('BELUM ADA KONTEN')
-                    elif task == "Profiles":
-                        st.caption('BELUM ADA KONTEN')
-                        st.subheader("User Profiles")
-                        user_result = view_all_users()
-                        clean_db = pd.DataFrame(user_result,columns=["Username","Password"])
-                        st.dataframe(clean_db)
-                else:
-                    st.warning("Incorrect Username/Password")
-
-        elif choice == "SignUp":
-            st.subheader("Create New Account")
-            new_user = st.text_input("Username")
-            new_password = st.text_input("Password",type='password')
-            code = st.text_input('CODE VERIFIKATOR')
-
-            if st.button("Signup"):
-                if code == '2801':
-                    create_usertable()
-                    add_userdata(new_user,make_hashes(new_password))
-                    st.success("You have successfully created a valid Account")
-                    st.info("Go to Login Menu to login")
-                else:
-                    st.warning('[+] CODE salah , mohon hubungi developer', icon="⚠️")
+            elif choice == "SignUp":
+                losi.signup(st,create_usertable)
 
     if __name__ == '__main__':
         main()
