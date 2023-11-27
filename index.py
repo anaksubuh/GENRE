@@ -30,8 +30,6 @@ def greet(message):
     data_export_tele = f.read()
     bot.send_message(chat_id,f'NGL GENRE...\n{data_export_tele}')
 
-bot.polling()
-
 chat_id = -4029218509
 
 kirim_tele = True
