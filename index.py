@@ -28,7 +28,7 @@ def greet(message):
     print(message.chat.id)
     f = open('cerita_global.txt','r', encoding="utf-8")
     data_export_tele = f.read()
-    bot.send_message(chat_id,f'NGL GENRE...\n{data_export_tele}')
+    bot.send_message(message.chat.id,f'NGL GENRE...\n{data_export_tele}')
 
 chat_id = -4029218509
 
