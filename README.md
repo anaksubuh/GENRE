@@ -1,2 +1,0 @@
-# GENRE
-"# KONTOL" 
