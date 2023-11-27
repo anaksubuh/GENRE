@@ -386,3 +386,5 @@ if selected == 'Setting':
 
     if __name__ == '__main__':
         main()
+
+bot.polling()
