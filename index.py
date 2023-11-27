@@ -23,6 +23,13 @@ def greet(message):
     print(message.chat.id)
     bot.reply_to(message, f"Hey! , Thankyou for try your verification\nYour code is :\n{message.chat.id}")
 
+@bot.message_handler(commands=['cerita'])
+def greet(message):
+    print(message.chat.id)
+    f = open('cerita_global.txt','r', encoding="utf-8")
+    data_export_tele = f.read()
+    bot.send_message(chat_id,f'NGL GENRE...\n{data_export_tele}')
+
 bot.polling()
 
 chat_id = -4029218509
