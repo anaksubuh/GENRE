@@ -23,6 +23,8 @@ def greet(message):
     print(message.chat.id)
     bot.reply_to(message, f"Hey! , Thankyou for try your verification\nYour code is :\n{message.chat.id}")
 
+bot.polling()
+
 chat_id = -4029218509
 
 kirim_tele = True
