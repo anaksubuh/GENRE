@@ -53,21 +53,12 @@ with st.sidebar:
 
 if selected == 'Dasboard':
 
-    # Add custom CSS to hide the GitHub icon
-    hide_github_icon = """
-    #GithubIcon {visibility: hidden;}
-    """
-    st.markdown(hide_github_icon, unsafe_allow_html=True)
-
     hide_streamlit_style = """
                 <style>
                     #MainMenu {visibility: hidden;}
                     #stToolbar {visibility: hidden;}
                     #viewerBadge_container__r5tak styles_viewerBadge__CvC9N {visibility: hidden;}
                     footer {visibility: hidden;}
-                    #GithubIcon {
-                    visibility: hidden;
-                    }
                 </style>
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
@@ -127,9 +118,6 @@ if selected == 'Curhat Kuy':
                     #stToolbar {visibility: hidden;}
                     #viewerBadge_container__r5tak styles_viewerBadge__CvC9N {visibility: hidden;}
                     footer {visibility: hidden;}
-                    #GithubIcon {
-                    visibility: hidden;
-                    }
                 </style>
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
@@ -230,9 +218,6 @@ if selected == 'Curhatku':
                     #stToolbar {visibility: hidden;}
                     #viewerBadge_container__r5tak styles_viewerBadge__CvC9N {visibility: hidden;}
                     footer {visibility: hidden;}
-                    #GithubIcon {
-                    visibility: hidden;
-                    }
                 </style>
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
@@ -288,9 +273,6 @@ if selected == 'Chat live':
                     #stToolbar {visibility: hidden;}
                     #viewerBadge_container__r5tak styles_viewerBadge__CvC9N {visibility: hidden;}
                     footer {visibility: hidden;}
-                    #GithubIcon {
-                    visibility: hidden;
-                    }
                 </style>
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
