@@ -59,6 +59,9 @@ if selected == 'Dasboard':
                     #stToolbar {visibility: hidden;}
                     #viewerBadge_container__r5tak styles_viewerBadge__CvC9N {visibility: hidden;}
                     footer {visibility: hidden;}
+                    #GithubIcon {
+                    visibility: hidden;
+                    }
                 </style>
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
@@ -118,6 +121,9 @@ if selected == 'Curhat Kuy':
                     #stToolbar {visibility: hidden;}
                     #viewerBadge_container__r5tak styles_viewerBadge__CvC9N {visibility: hidden;}
                     footer {visibility: hidden;}
+                    #GithubIcon {
+                    visibility: hidden;
+                    }
                 </style>
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
@@ -218,6 +224,9 @@ if selected == 'Curhatku':
                     #stToolbar {visibility: hidden;}
                     #viewerBadge_container__r5tak styles_viewerBadge__CvC9N {visibility: hidden;}
                     footer {visibility: hidden;}
+                    #GithubIcon {
+                    visibility: hidden;
+                    }
                 </style>
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
@@ -273,6 +282,9 @@ if selected == 'Chat live':
                     #stToolbar {visibility: hidden;}
                     #viewerBadge_container__r5tak styles_viewerBadge__CvC9N {visibility: hidden;}
                     footer {visibility: hidden;}
+                    #GithubIcon {
+                    visibility: hidden;
+                    }
                 </style>
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
