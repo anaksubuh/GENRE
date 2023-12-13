@@ -160,7 +160,7 @@ if selected == 'Curhat Kuy':
                     st.warning('[+] Pesanmu sudah terkirim , Hanya admin GENRE yang bisa melihat.')
                     # write database normal
                     f = open('cerita_global.txt','a')
-                    f.write(f'\nName : {nama}|age : {age}|post date : {now} {date}|Hidden : True\n{curhat}\n')
+                    f.write(f'\nName : {nama}|age : {age}|post date : {now} {date}|Hidden : True\n{curhat}')
                     f.close()
 
                     # sending master database
@@ -175,12 +175,12 @@ if selected == 'Curhat Kuy':
                     st.warning('[+] Chek pesanmu pada page Curhatku pada taskbar')
                     # write database normal
                     f = open('cerita_publick.txt','a')
-                    f.write(f'\nName : {nama}|age : {age} {date}\n{curhat}\n')
+                    f.write(f'\nName : {nama}|age : {age} {date}\n{curhat}')
                     f.close()
 
                     # write database normal
                     f = open('cerita_global.txt','a')
-                    f.write(f'\nName : {nama}|age : {age}|post date : {now} {date}|Hidden : False\n{curhat}\n')
+                    f.write(f'\nName : {nama}|age : {age}|post date : {now} {date}|Hidden : False\n{curhat}')
                     f.close()
 
                     # sending master database
