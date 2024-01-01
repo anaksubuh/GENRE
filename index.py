@@ -382,7 +382,7 @@ if selected == 'Setting':
                 losi.login(st,make_hashes,login_user,check_hashes,cache,create_usertable,ws,wb,view_all_users,pd)
 
             elif choice == "SignUp":
-                losi.signup(st,create_usertable)
+                losi.signup(st,create_usertable,make_hashes,add_userdata)
 
     if __name__ == '__main__':
         main()

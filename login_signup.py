@@ -41,7 +41,7 @@ def login(st,make_hashes,login_user,check_hashes,cache,create_usertable,ws,wb,vi
             import show_database as sd
             sd.sd(st,ws,wb,view_all_users,pd,cache)
 
-def signup(st,create_usertable):
+def signup(st,create_usertable,make_hashes,add_userdata):
     st.subheader("Create New Account")
     new_user = st.text_input("Username")
     new_password = st.text_input("Password",type='password')
@@ -50,7 +50,7 @@ def signup(st,create_usertable):
     if st.button("Signup"):
         if code == '2801':
             create_usertable()
-            create_usertable(new_user,create_usertable(new_password))
+            add_userdata(new_user,make_hashes(new_password))
             st.success("You have successfully created a valid Account")
             st.info("Go to Login Menu to login")
         else:
