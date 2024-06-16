@@ -313,51 +313,54 @@ if selected == 'Chat live':
 
 if selected == 'Setting':
 
-    hide_streamlit_style = """
-                <style>
-                    #MainMenu {visibility: hidden;}
-                    #stToolbar {visibility: hidden;}
-                    #viewerBadge_container__r5tak styles_viewerBadge__CvC9N {visibility: hidden;}
-                    stToolbar {visibility: hidden;}
-                    footer {visibility: hidden;}
-                </style>
-                """
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
-
-    # Security
+    import streamlit as st
+    import sqlite3
     import hashlib
-    def make_hashes(password):
-        return hashlib.sha256(str.encode(password)).hexdigest()
 
-    def check_hashes(password,hashed_text):
-        if make_hashes(password) == hashed_text:
-            return hashed_text
-        return False
-    # DB Management
-    import sqlite3 
-    conn = sqlite3.connect('data.db')
-    c = conn.cursor()
-    # DB  Functions
-    def create_usertable():
-        c.execute('CREATE TABLE IF NOT EXISTS userstable(username TEXT,password TEXT)')
+    # Fungsi untuk membuat koneksi database
+    def create_connection():
+        conn = sqlite3.connect('data.db')
+        return conn
 
-    def add_userdata(username,password):
-        c.execute('INSERT INTO userstable(username,password) VALUES (?,?)',(username,password))
+    # Fungsi untuk membuat tabel pengguna
+    def create_user_table():
+        conn = create_connection()
+        conn.execute('''CREATE TABLE IF NOT EXISTS users (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            username TEXT UNIQUE,
+                            password TEXT
+                        );''')
         conn.commit()
+        conn.close()
 
-    def login_user(username,password):
-        c.execute('SELECT * FROM userstable WHERE username =? AND password = ?',(username,password))
-        data = c.fetchall()
-        return data
+    # Fungsi untuk menampilkan halaman logout
+    def show_logout_page():
+        st.subheader(f"Selamat datang, {st.session_state['username']}")
 
-    def view_all_users():
-        c.execute('SELECT * FROM userstable')
-        data = c.fetchall()
-        return data
+        ###
+        '''
+        Nanti kamu masukin data di sini
+        '''
+        ###
 
-    import login_signup as losi
+        if st.button("Keluar"):
+            del st.session_state['username']
+            st.success("Anda telah keluar.")
 
+    def login_or_signup(cache):
+        menu = ["Login","SignUp"]
+        choice = st.sidebar.selectbox("Menu",menu)
+
+        if choice == "Login":
+            import login as lg
+            lg.show_login_page(st,cache)
+        elif choice == "SignUp":
+            import signup as su
+            su.show_registration_page(st)
+
+    # Fungsi utama untuk mengatur tampilan halaman
     def main():
+
         """Simple Login App"""
 
         cache = (str(st.cache_resource))
@@ -372,17 +375,11 @@ if selected == 'Setting':
             chek_login = (f'{data[x]}')
             if chek_login == 'True':
                 import show_database as sd
-                sd.sd(st,ws,wb,view_all_users,pd,cache)
+                sd.sd(st,ws,wb,pd,cache)
+            if chek_login == 'False':
+                login_or_signup(cache)
         else:
-
-            menu = ["Login","SignUp"]
-            choice = st.sidebar.selectbox("Menu",menu)
-
-            if choice == "Login":
-                losi.login(st,make_hashes,login_user,check_hashes,cache,create_usertable,ws,wb,view_all_users,pd)
-
-            elif choice == "SignUp":
-                losi.signup(st,create_usertable,make_hashes,add_userdata)
+            login_or_signup(cache)
 
     if __name__ == '__main__':
         main()
