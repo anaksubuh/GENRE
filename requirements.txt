@@ -17,3 +17,4 @@ streamlit-lottie==0.0.5
 streamlit-option-menu==0.3.6
 streamlit-toggle-switch==1.0.2
 streamlit-vertical-slider==1.0.2
+st-login-form==0.2.3
