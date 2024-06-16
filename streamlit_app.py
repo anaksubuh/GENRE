@@ -46,23 +46,6 @@ st.set_page_config(
     }
 )
 
-hide_github_icon = """
-    #GithubIcon {
-        visibility: hidden;
-    }
-    #MainMenu {
-        visibility: hidden;
-    }
-    #footer {
-        visibility: hidden;
-    }
-    #header {
-        visibility: hidden;
-    }
-
-"""
-st.markdown(hide_github_icon, unsafe_allow_html=True)
-
 with st.sidebar:
 
     st.image('logo.png',width=95)
