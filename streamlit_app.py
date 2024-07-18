@@ -15,46 +15,6 @@ import openpyxl
 wb = openpyxl.Workbook()
 ws = wb.active
 
-st.set_page_config(
-    page_title='GENRE KOTA MAGELANG',
-    page_icon='logo.png',
-    layout='wide',  
-    initial_sidebar_state='expanded',
-    menu_items={
-        'Get Help': 'https://www.extremelycoolapp.com/help',
-        'Report a bug': 'https://www.extremelycoolapp.com/bug',
-         'About': '# This is a header. This is an *extremely* cool app!'
-    }
-)
-
-# Fungsi untuk menyembunyikan elemen tertentu menggunakan CSS
-def hide_streamlit_elements():
-    hide_elements = """
-        <style>
-        /* Sembunyikan tombol perbesar gambar */
-        [title="View fullscreen"] {
-            display: none;
-        }
-        /* Sembunyikan simbol link pada header */
-        .stMarkdown .css-10trblm a {
-            display: none;
-        }
-        </style>
-    """
-    st.markdown(hide_elements, unsafe_allow_html=True)
-
-# Fungsi untuk menampilkan gambar tanpa tombol perbesar
-def display_image(image_path, width=None):
-    img = Image.open(image_path)
-    st.image(img, use_column_width=(width is None), width=width)
-
-# Fungsi untuk menampilkan header tanpa simbol link
-def display_header(header_text):
-    st.markdown(f"<h1 style='display: inline-block;'>{header_text}</h1>", unsafe_allow_html=True)
-
-# Memanggil fungsi untuk menyembunyikan elemen
-hide_streamlit_elements()
-
 # modul telegram untuk mengecek id
 api_telegram_bot = '6215631300:AAH0rPZsMxTT_fnEva2sjGeVqugTdQwk_t8'
 bot = telebot.TeleBot(api_telegram_bot)
@@ -74,8 +34,21 @@ chat_id = -4029218509
 
 kirim_tele = True
 
+st.set_page_config(
+    page_title='GENRE KOTA MAGELANG',
+    page_icon='logo.png',
+    layout='wide',  
+    initial_sidebar_state='expanded',
+    menu_items={
+        'Get Help': 'https://www.extremelycoolapp.com/help',
+        'Report a bug': 'https://www.extremelycoolapp.com/bug',
+         'About': '# This is a header. This is an *extremely* cool app!'
+    }
+)
+
 with st.sidebar:
-    display_image('logo.png', width=95)
+
+    st.image('logo.png',width=95)
     selected = option_menu('Menu', ['Dasboard','Curhat Kuy','Curhatku','Chat live','Setting'], icons=['house','book','list','chat','gear'], menu_icon="cast", default_index=0)
 
 if selected == 'Dasboard':
@@ -105,9 +78,9 @@ if selected == 'Dasboard':
 
     col1, col2, col3 = st.columns(3)
     with col2:
-        display_image('logo.png', width=300)
+        st.image('logo.png',width=300)
     
-    display_header('Curhat via website :')
+    st.header('Curhat via website :')
     st.write('-Hallo Genrengers')
     st.write('-Kamu bisa curhat sebanyak seaman dan senyaman mungkin di sini lho gaess, gimana caranya?.')
     st.write('-Langsung aja klik (>) di atas kiri lalu pilih bagian (Curhat kuy).')
@@ -118,7 +91,7 @@ if selected == 'Dasboard':
     st.write('- Jika cerita dan namamu hanya untuk genre , mohon checklist (Hanya admin GENRE yang bisa melihat.).')
     st.header('')
     
-    display_header('Konseling via instagram & wa :')
+    st.header('Konseling via instagram & wa :')
     st.write('- Kamu bisa curhat sebanyak seaman dan senyaman mungkin di sini lho gaess, gimana caranya?')
     st.write('- Langsung aja klik (>) di atas kiri lalu pilih bagian (Chat Live)')
     st.write('- Okei di situlah kamu bisa memilih ingin kontak genre atau konseling langsung dari whatsapp maupun instagram.')
@@ -151,7 +124,7 @@ if selected == 'Curhat Kuy':
 
     col1, col2, col3 = st.columns(3)
     with col2:
-        display_image('logo.png', width=300)
+        st.image('logo.png',width=300)
 
     nama   = st.text_input('Name (optional) :','')
     age = st.slider('How old are you?', 0, 100, 17)
@@ -217,6 +190,12 @@ if selected == 'Curhat Kuy':
                         bot = telebot.TeleBot(api_telegram_bot)
                         bot.send_message(chat_id,f'NGL GENRE...\n{data_export_tele}')
 
+            
+        else:
+            st.warning('[+] kamu tidak membuat pesan')
+            
+            time.sleep(2)
+
     for i in range(5):
         st.write('')
 
@@ -241,21 +220,36 @@ if selected == 'Curhatku':
                     footer {visibility: hidden;}
                 </style>
                 """
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
     col1, col2, col3 = st.columns(3)
+    with col1:
+        pass
     with col2:
-        display_image('logo.png', width=300)
+        st.image('logo.png',width=300)
+        pass
+    with col3:
+        pass
 
-    st.write('![Foo](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTznmKnFZt18pGNNGzRurUSVV1R4JZZf1Cz8g&usqp=CAU)')
+    # reading database
+    database = open('cerita_publick.txt', 'r', encoding="utf-8")
+    count = 0
+    # Using for loop
+    for data in database:
+        count += 1
+        text = (str(data.strip()))
+        ganjil_genap = ('genap' if (count % 2 == 0) else 'ganjil')
+        if ganjil_genap == 'ganjil':
+            col1,col2= st.columns(2)
+            with col1:
+                st.success(text, icon="ℹ")
+            with col2:
+                pass
 
-    a = open(f'history.json')
-    data = json.load(a)
-
-    f = open('cerita_publick.txt','r', encoding="utf-8")
-    genre_mgl = f.read().split('\n')
-    for i in genre_mgl:
-        st.write(i)
+        if ganjil_genap == 'genap':
+            st.info(text, icon="ℹ")
+            st.warning('|'+'-'*60+'|')
+        st.caption('')
 
     for i in range(5):
         st.write('')
@@ -283,17 +277,25 @@ if selected == 'Chat live':
                 """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
 
-    col1, col2, col3 = st.columns(3)
+    st.header('Hallo sobat GENRE INDOENSIA')
+    st.write('Temen-temen pernah gak sih mau cerita tapi gak tau harus cerita ke mana, karena tidak ada tempat bercerita yang aman dan nyaman :( ')
+    st.write('Kami genre kota magelang menyediakan tempat pelayanan dengan basis konseling sebaya atau curhat secara aman nyaman baik public maupun private😃.')
+    st.write('Loh kak bagaimana caranya? , teman-teman langsung bisa chat secara private dengan cara click kolom di bawah ini 😊.')
+
+    col1, col2, col3, col4, col5, col6, col7, col8, col9= st.columns(9)
+    with col1:
+        st.write('')
+        st.link_button('whatsapp 💬','https://wa.me/6282331970107?text=hallo%20genre%20kota%20magelang%20:)')
     with col2:
-        display_image('logo.png', width=300)
+        st.write('')
+        st.link_button('Instagram 💬','https://www.instagram.com/genrekotamagelang/')
+    #with col3:
+        #st.link_button('Twitter 💬','https://twitter.com/genre_indonesia')
 
-    st.subheader('Hello genrengers')
-
-    st.write('hubungi kami via whatsapp')
-
-    st.write('[![Foo](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTznmKnFZt18pGNNGzRurUSVV1R4JZZf1Cz8g&usqp=CAU)](https://wa.me/+6285925728687)')
-
-    st.write('[![Foo](https://cdn-icons-png.flaticon.com/512/174/174855.png)](https://www.instagram.com/genrekotamagelang/)')
+    # chat auto balas
+    #prompt = st.chat_input("Say something")
+    #if prompt:
+    #    st.write(f"ROMEO : {prompt}")
 
     for i in range(5):
         st.write('')
@@ -311,18 +313,73 @@ if selected == 'Chat live':
 
 if selected == 'Setting':
 
-    hide_streamlit_style = """
-                <style>
-                    #MainMenu {visibility: hidden;}
-                    #stToolbar {visibility: hidden;}
-                    #viewerBadge_container__r5tak styles_viewerBadge__CvC9N {visibility: hidden;}
-                    footer {visibility: hidden;}
-                </style>
-                """
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+    import streamlit as st
+    import sqlite3
+    import hashlib
 
-    col1, col2, col3 = st.columns(3)
-    with col2:
-        display_image('logo.png', width=300)
+    # Fungsi untuk membuat koneksi database
+    def create_connection():
+        conn = sqlite3.connect('data.db')
+        return conn
 
-    st.write('h')
+    # Fungsi untuk membuat tabel pengguna
+    def create_user_table():
+        conn = create_connection()
+        conn.execute('''CREATE TABLE IF NOT EXISTS users (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            username TEXT UNIQUE,
+                            password TEXT
+                        );''')
+        conn.commit()
+        conn.close()
+
+    # Fungsi untuk menampilkan halaman logout
+    def show_logout_page():
+        st.subheader(f"Selamat datang, {st.session_state['username']}")
+
+        ###
+        '''
+        Nanti kamu masukin data di sini
+        '''
+        ###
+
+        if st.button("Keluar"):
+            del st.session_state['username']
+            st.success("Anda telah keluar.")
+
+    def login_or_signup(cache):
+        menu = ["Login","SignUp"]
+        choice = st.sidebar.selectbox("Menu",menu)
+
+        if choice == "Login":
+            import login as lg
+            lg.show_login_page(st,cache)
+        elif choice == "SignUp":
+            import signup as su
+            su.show_registration_page(st)
+
+    # Fungsi utama untuk mengatur tampilan halaman
+    def main():
+
+        """Simple Login App"""
+
+        cache = (str(st.cache_resource))
+        cache = (cache[73:91])
+        cache = (cache.replace('<streamlit.runtime.caching.cache_resource_api.CacheResourceAPI object at ',''))
+        a = open(f'history.json')
+        data = json.load(a)
+        x = cache
+        y = 'True|0'
+
+        if x in data:
+            chek_login = (f'{data[x]}')
+            if chek_login == 'True':
+                import show_database as sd
+                sd.sd(st,ws,wb,pd,cache)
+            if chek_login == 'False':
+                login_or_signup(cache)
+        else:
+            login_or_signup(cache)
+
+    if __name__ == '__main__':
+        main()
