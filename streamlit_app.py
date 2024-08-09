@@ -2,6 +2,7 @@ import base64
 import json
 import time
 import telebot
+import requests
 import datetime
 import openpyxl
 import pandas as pd
@@ -10,6 +11,8 @@ import streamlit as st
 import streamlit.components.v1 as components
 from streamlit_option_menu import option_menu
 from streamlit_extras.switch_page_button import switch_page
+from streamlit_cookies_manager import EncryptedCookieManager
+from http.cookies import SimpleCookie
 
 import openpyxl
 wb = openpyxl.Workbook()
@@ -363,23 +366,117 @@ if selected == 'Setting':
 
         """Simple Login App"""
 
-        cache = (str(st.cache_resource))
-        cache = (cache[73:91])
-        cache = (cache.replace('<streamlit.runtime.caching.cache_resource_api.CacheResourceAPI object at ',''))
+        # Function to get IP Address
+        def get_ip():
+            try:
+                ip = requests.get('https://api.ipify.org').text
+                return ip
+            except:
+                return "IP not found"
+
+        # Function to get approximate geolocation based on IP
+        def get_geolocation(ip):
+            try:
+                response = requests.get(f"https://ipapi.co/{ip}/json/")
+                location_data = response.json()
+                return f"{location_data.get('city', 'Unknown City')}, {location_data.get('region', 'Unknown Region')}, {location_data.get('country_name', 'Unknown Country')}"
+            except:
+                return "Location not found"
+
+        # Function to get timezone information
+        def get_timezone():
+            try:
+                timezone = time.strftime('%Z', time.gmtime())
+                return timezone
+            except:
+                return "Timezone not found"
+
+        # Function to set a cookie
+        def set_cookie(cookie_name, cookie_value):
+            st.experimental_set_query_params(cookie=f"{cookie_name}={cookie_value}")
+
+        # Function to get a cookie
+        def get_cookie(cookie_name):
+            cookie_header = st.query_params.get("cookie", [""])[0]
+            cookie = SimpleCookie(cookie_header)
+            return cookie.get(cookie_name)
+
+        # Basic Authentication
+        def authenticate():
+            st.title("Login")
+            username = st.text_input("Username")
+            password = st.text_input("Password", type="password")
+            
+            if username == "admin" and password == "password":
+                st.session_state.authenticated = True
+                set_cookie("auth_token", "valid_token")
+            else:
+                st.session_state.authenticated = False
+
+        # Inject JavaScript to get screen resolution and language preferences
+        js_code = """
+        <script>
+            const getData = () => {
+                const screenResolution = `${window.screen.width}x${window.screen.height}`;
+                const language = navigator.language || navigator.userLanguage;
+                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                return {
+                    screenResolution: screenResolution,
+                    language: language,
+                    timezone: timezone,
+                };
+            };
+            const data = getData();
+            fetch(`${window.location.origin}/_stcore/get_js_data`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(data),
+            });
+        </script>
+        """
+
+        st.components.v1.html(js_code, height=0)
+
+        # Function to handle the JS data sent to the server
+        def handle_js_data(js_data):
+            js_data_dict = json.loads(js_data)
+            st.session_state['screen_resolution'] = js_data_dict.get('screenResolution', 'Resolution not found')
+            st.session_state['language'] = js_data_dict.get('language', 'Language not found')
+            st.session_state['timezone_js'] = js_data_dict.get('timezone', 'Timezone not found')
+
+        # Access the query parameters directly
+        query_params = st.query_params
+        if 'json_data' in query_params:
+            js_data = query_params['json_data'][0]
+            handle_js_data(js_data)
+
+        # Collect all data
+        user_agent = query_params.get('user_agent', ['Unknown'])[0]  # Replace with actual user agent retrieval
+        ip_address = get_ip()
+        geolocation = get_geolocation(ip_address)
+        timezone_py = get_timezone()
+        screen_resolution = st.session_state.get('screen_resolution', 'Resolution not found')
+        language = st.session_state.get('language', 'Language not found')
+        timezone_js = st.session_state.get('timezone_js', 'Timezone not found')
+
+        # Combine all data into a single token string
+        token = f"User-Agent: {user_agent}, IP: {ip_address}, Geolocation: {geolocation}, Timezone (Python): {timezone_py}, Timezone (JS): {timezone_js}, Screen Resolution: {screen_resolution}, Language: {language}"
+
         a = open(f'history.json')
         data = json.load(a)
-        x = cache
+        x = token
         y = 'True|0'
 
         if x in data:
+            print(f'[+] DATA KOKIS : {x}')
             chek_login = (f'{data[x]}')
             if chek_login == 'True':
                 import show_database as sd
-                sd.sd(st,ws,wb,pd,cache)
+                sd.sd(st,ws,wb,pd,token)
             if chek_login == 'False':
-                login_or_signup(cache)
+                login_or_signup(token)
         else:
-            login_or_signup(cache)
+            login_or_signup(token)
 
     if __name__ == '__main__':
         main()
